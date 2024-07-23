@@ -11,7 +11,7 @@ export default function Sidebar() {
           <ListItem p="10px 0px">
             <EditIcon pr="5px"  />
             <NavLink to="/" style={{ textDecoration: "none", color: "black" }}>
-              Dashboard
+              Dashboards
             </NavLink>
           </ListItem>
           <ListItem p="10px 0px">
