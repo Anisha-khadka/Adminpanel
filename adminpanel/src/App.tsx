@@ -1,4 +1,7 @@
 
+import Navbar from "./Component/Navbar/Navbar"
+
+
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 import './App.css'
 import Dashboard from './Pages/Dashboard'
@@ -24,12 +27,16 @@ const router = createBrowserRouter(
   )
 )
 
+
+
+export const App = () => {
   return (
+    <div className="container">
+      <Navbar/>
+    </div>
     <>
     <RouterProvider router={router}/>
    
     </>
   )
 }
-
-export default App

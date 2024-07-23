@@ -1,0 +1,31 @@
+.content h1{
+   flex: 1;
+   text-align: left;
+   margin: 0;
+}
+
+.content{
+    color: rgb(28, 19, 13);
+    display: flex;
+    /* align-items: center;
+    justify-content: center; */
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    font-weight: bold;
+    background-color: cadetblue;
+}
+.search-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.search-btn{
+    flex: 1;
+}
+.search-icon{
+    cursor: pointer;
+}
+
