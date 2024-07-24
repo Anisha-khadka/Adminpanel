@@ -11,7 +11,7 @@ import Orders from './Pages/Orders'
 import Notifications from './Pages/Notifications'
 
 
-function App() {
+{/* function App() { */}
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -26,17 +26,22 @@ const router = createBrowserRouter(
     </>
   )
 )
+// }
+  
 
 
 
 export const App = () => {
   return (
+    <>
     <div className="container">
       <Navbar/>
+      <RouterProvider router={router}/>
     </div>
-    <>
-    <RouterProvider router={router}/>
-   
-    </>
+     </>
   )
 }
+
+
+
+
