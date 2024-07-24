@@ -1,4 +1,7 @@
 
+import Navbar from "./Component/Navbar/Navbar"
+
+
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 import './App.css'
 import Dashboard from './Pages/Dashboard'
@@ -8,7 +11,7 @@ import Orders from './Pages/Orders'
 import Notifications from './Pages/Notifications'
 
 
-function App() {
+{/* function App() { */}
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -23,13 +26,22 @@ const router = createBrowserRouter(
     </>
   )
 )
+// }
+  
 
+
+
+export const App = () => {
   return (
     <>
-    <RouterProvider router={router}/>
-   
-    </>
+    <div className="container">
+      <Navbar/>
+      <RouterProvider router={router}/>
+    </div>
+     </>
   )
 }
 
-export default App
+
+
+
