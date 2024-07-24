@@ -1,17 +1,28 @@
-import { ArrowRightIcon, BellIcon, CopyIcon, EditIcon } from "@chakra-ui/icons";
+import {
+  ArrowRightIcon,
+  BellIcon,
+  CopyIcon,
+  EditIcon,
+  HamburgerIcon,
+} from "@chakra-ui/icons";
 import { Box, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 export default function Sidebar() {
+  const [isOpen, setIsOpen] = useState(true);
+  const toggle = () => setIsOpen(!isOpen);
   return (
     <>
+    <Box>
       <Text color="gray">MAIN PAGES</Text>
-      <Box float="left" mr="20px">
+     <HamburgerIcon onClick={toggle} />
+     {isOpen && ( <Box float="left" width="200px" mr="20px" >
         <UnorderedList listStyleType="none">
           <ListItem p="10px 0px">
-            <EditIcon pr="5px"  />
+            <EditIcon pr="5px" />
             <NavLink to="/" style={{ textDecoration: "none", color: "black" }}>
-              Dashboards
+              Dashboard
             </NavLink>
           </ListItem>
           <ListItem p="10px 0px">
@@ -42,6 +53,9 @@ export default function Sidebar() {
             </NavLink>
           </ListItem>
         </UnorderedList>
+      
+      </Box>
+        )}
       </Box>
     </>
   );
