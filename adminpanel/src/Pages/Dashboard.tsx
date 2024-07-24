@@ -20,12 +20,12 @@ export default function Dashboard() {
     },
 
   ];
-  // const table = useReactTable({
-  //   columns,
-  //   data,
+  const table = useReactTable({
+    columns,
+    data,
    
-  //   getCoreRowModel: getCoreRowModel(),
-  // });
+    getCoreRowModel: getCoreRowModel(),
+  });
   return (
     <div>
       <Box display="flex" flexDirection="column" pt="10px" h="50vh" justifyContent="center" bg="lightgray">
