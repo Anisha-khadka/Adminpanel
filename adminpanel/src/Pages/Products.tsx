@@ -7,7 +7,7 @@ export default function Products() {
   return (
    <div>
     
-      <Box  pt="10px" h="100vh" bg="lightgray">
+      <Box pt="10px" h="100vh" bg="lightgray">
       <Text textAlign="center">Product Information</Text>
       <Box display="flex" justifyContent="space-between">
       <VStack spacing={4}>
@@ -20,9 +20,7 @@ export default function Products() {
   <MenuList>
     <MenuItem>MENS</MenuItem>
     <MenuItem>WOMENS</MenuItem>
-    <MenuItem>KIDS</MenuItem>
-    <MenuItem>JWELLERY</MenuItem>
-    <MenuItem>ELECTRONICS</MenuItem>
+    <MenuItem>CHILDRENS</MenuItem>
     </MenuList>
     </Menu>
         </Box>
@@ -45,11 +43,11 @@ export default function Products() {
         </Box>
 
       </Box>
-
+      <Box marginLeft="140px">
       <Text marginTop="50px">PRODUCT</Text>
       <Input placeholder='Product details' />
 
-      <Box marginLeft="140px">
+      
       <Text marginTop="50px">Category</Text>
       <Input placeholder='Category details' />
       <Menu>
@@ -59,7 +57,7 @@ export default function Products() {
       <MenuList>
       <MenuItem>MEN</MenuItem>
       <MenuItem>WOMEN</MenuItem>
-      <MenuItem>KIDS</MenuItem>
+      <MenuItem>CHILDRENS</MenuItem>
       </MenuList>
       </Menu>
 
