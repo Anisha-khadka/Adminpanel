@@ -8,7 +8,8 @@ import Dashboard from './Pages/Dashboard'
 import Products from './Pages/Products'
 import RootsLayout from './Layouts/Rootslayout'
 import Orders from './Pages/Orders'
-import Notifications from './Pages/Notifications'
+// import Profile from './Pages/Profile'
+import Notifications from "./Pages/Profile"
 
 
 {/* function App() { */}
@@ -19,19 +20,14 @@ const router = createBrowserRouter(
       <Route index element={<Dashboard/>} />
       <Route path="/products" element={<Products/>}/>
       <Route path="/orders" element={<Orders/>}/>
-      <Route path="/notification" element={<Notifications/>}/>
-
-
-    </Route>
+       <Route path="/notification" element={<Notifications/>}/>
+ 
+        </Route>
     </>
   )
 )
-// }
-  
 
-
-
-export const App = () => {
+  export const App = () => {
   return (
     <>
     <div className="container">
