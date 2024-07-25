@@ -1,0 +1,25 @@
+[{
+    "id": 1,
+    "product": "Shirt",
+    "Tracking No":"coder948947",
+    "Price":6536,
+    "Date":"2022-08-02"
+
+},
+{
+    "id": 2,
+    "product": "Shirt",
+    "Tracking No":"coder534653",
+    "Price":8763,
+    "Date":"2022-08-02"
+
+},
+{
+    "id": 3,
+    "product": "Pant",
+    "Tracking No":"coder849794",
+    "Price":555,
+    "Date":"2022-08-02"
+
+}
+]

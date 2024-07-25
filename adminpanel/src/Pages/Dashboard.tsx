@@ -1,6 +1,10 @@
 import {
   Box,
   Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   SimpleGrid,
   Table,
   TableContainer,
@@ -9,32 +13,47 @@ import {
   Text,
   Th,
   Tr,
+  VStack,
+  Button,
 } from "@chakra-ui/react";
 import {
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 // import { useMemo } from "react";
-import mData from "../MOCK_DATA (1).json";
-import { useMemo } from "react";
+// import mData from "../MOCK_DATA (1).json";
+import { useMemo, useState } from "react";
 import { BarChart, LineChart, PieChart } from "@mui/x-charts";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { useProductStore } from "../store/ProductStore";
+
+
 
 export default function Dashboard() {
-  const data = useMemo(() => mData, []);
+
+ 
+  const posts=useProductStore((state)=>state.posts);
+  console.log(posts)
+
+  const[pagination,setPagination]=useState({
+    pageIndex:0,
+    pageSize:10,
+  });
+  const[selectCategory,setSelectCategory]=useState("")
+  const data = useMemo(() => posts, [posts]);
 
   const columns = [
     {
       header: "ID",
       accessorKey: "id",
+     
     },
     {
       header: "Image",
       accessorKey: "image",
-      cell: ({ cell }) => (
-        <Image src={cell.getValue()}boxSize="50px" />
-      ),
-      
+      cell: ({ cell }) => <Image src={cell.getValue()} boxSize="50px" />,
     },
     {
       header: "Product",
@@ -60,17 +79,12 @@ export default function Dashboard() {
     {
       header: "Sales",
       accessorKey: "sales",
-      cell:({cell,row})=>{
-        return <div>Rs {row.original.sales}</div>
-      }
+      cell: ({ cell, row }) => {
+        return <div>Rs {row.original.sales}</div>;
+      },
     },
   ];
-  const table = useReactTable({
-    columns,
-    data,
-
-    getCoreRowModel: getCoreRowModel(),
-  });
+  
 
   //calculate total orders
   const totalOrders = useMemo(() => {
@@ -89,19 +103,98 @@ export default function Dashboard() {
   const totalSales = useMemo(() => {
     return data.reduce((sum, row) => sum + row.sales, 0);
   }, [data]);
+
+  //sales of women men and children
+  const totalWomenSale = useMemo(() => {
+    return data
+      .filter((row) => row.category === "Womens")
+      .reduce((sum, row) => sum + row.sales, 0);
+  }, [data]);
+  const totalMenSale = useMemo(() => {
+    return data
+      .filter((row) => row.category === "Mens")
+      .reduce((sum, row) => sum + row.sales, 0);
+  }, [data]);
+  const totalChildrenSale = useMemo(() => {
+    return data
+      .filter((row) => row.category === "Children")
+      .reduce((sum, row) => sum + row.sales, 0);
+  }, [data]);
+
+  
+
+  //category filter
+const handleClick=(category)=>{
+  setSelectCategory(category)
+
+}
+const filteredProducts=useMemo(()=>{
+  return selectCategory?data.filter((row)=>row.category===selectCategory):data
+},[data,selectCategory])
+
+const table = useReactTable({
+  columns,
+  data:filteredProducts,
+  getCoreRowModel: getCoreRowModel(),
+  getPaginationRowModel:getPaginationRowModel(),
+  onPaginationChange:setPagination,
+  state:{
+    pagination,
+  },
+});
+   
+  // const filteredData=selectCategory?data.filter((row)=>row.category===selectCategory):data;
+ 
   return (
     <div>
       <Box
         display="flex"
         flexDirection="column"
         pt="20px"
-        h="230vh"
+        h="200rem"
         bg="lightgray"
       >
         <Box bg="white" w="100%" h="6vh" p="6px" mb="20px" textAlign="center">
           Ecommerce
         </Box>
+        <Box display="flex">
+          <LineChart
+            xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13,14,15,16,17] }]}
+            series={[
+              {
+                data: data.map((row) => row.stock),
+              },
+            ]}
+            width={500}
+            height={300}
+          />
+          <PieChart
+            series={[
+              {
+                data: [
+                  { value: totalWomenSale, label: "Women" },
+                  { value: totalMenSale, label: "Men" },
+                  { value: totalChildrenSale, label: "Children" },
+                ],
+              },
+            ]}
+            width={400}
+            height={200}
+          />
+        </Box>
+        <Box>
+          <BarChart
+            series={[
+              { data: data.map((row) => row.order) },
+              { data: data.map((row) => row.stock) },
+            ]}
+            height={390}
+            xAxis={[{ data: ["Skirt", "Shirt", "Pant"], scaleType: "band" }]}
+            margin={{ top: 10, bottom: 30, left: 180, right: 10 }}
+          />
+        </Box>
 
+       
         <SimpleGrid column={2} spacing={10}>
           <Box bg="teal" height="80px">
             Total Users
@@ -120,8 +213,27 @@ export default function Dashboard() {
             <Text>Rs {totalSales}</Text>
           </Box>
         </SimpleGrid>
+        <Box display="flex" justifyContent="space-between">
+          <VStack spacing={4}>
+            <Menu>
+              <MenuButton
+                as={Button}
+                rightIcon={<ChevronDownIcon />}
+                mb="130px"
+              >
+                CATEGORY BY
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={() => handleClick("All")}>All</MenuItem>
+                <MenuItem onClick={() => handleClick("Mens")}>MENS</MenuItem>
+                <MenuItem onClick={() => handleClick("Womens")}>WOMENS</MenuItem>
+                <MenuItem onClick={() => handleClick("Children")}>KIDS</MenuItem>
+              </MenuList>
+            </Menu>
+          </VStack>
+        </Box>
         <TableContainer>
-          <Table colorScheme="teal" cellPadding="3px">
+   <Table colorScheme="teal" cellPadding="3px">
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -150,21 +262,26 @@ export default function Dashboard() {
               ))}
             </Tbody>
           </Table>
-        </TableContainer>
+      
+       <Box display="flex" justifyContent="space-around"> 
+          <Button
+  onClick={() => table.firstPage()}
+  disabled={!table.getCanPreviousPage()}
+>
+  {'<<'}
+</Button>
 
-<LineChart
-  xAxis={[{ data: [1,2,3,4,5,6,7,8,9,10,11,12] }]}
-  
-  series={[
-    {
-      data: data.map(row=>row.stock),
-    },
-  ]}
-  width={500}
-  height={300}
-/>
-Press Enter to start editing
-U
+
+
+<Button
+  onClick={() => table.lastPage()}
+  disabled={!table.getCanNextPage()}
+>
+  {'>>'}
+</Button>
+</Box>
+
+        </TableContainer>
       </Box>
     </div>
   );
