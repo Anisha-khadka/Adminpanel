@@ -15,6 +15,11 @@ import {
   Tr,
   VStack,
   Button,
+  Tooltip,
+  Card,
+  CardHeader,
+  Center,
+  CardFooter,
 } from "@chakra-ui/react";
 import {
   flexRender,
@@ -25,30 +30,26 @@ import {
 // import { useMemo } from "react";
 // import mData from "../MOCK_DATA (1).json";
 import { useMemo, useState } from "react";
-import { BarChart, LineChart, PieChart } from "@mui/x-charts";
+// import { BarChart, LineChart, PieChart } from "@mui/x-charts";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useProductStore } from "../store/ProductStore";
-
-
+import { Bar, BarChart, Line, LineChart, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 export default function Dashboard() {
+  const posts = useProductStore((state) => state.posts);
+  console.log(posts);
 
- 
-  const posts=useProductStore((state)=>state.posts);
-  console.log(posts)
-
-  const[pagination,setPagination]=useState({
-    pageIndex:0,
-    pageSize:10,
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
   });
-  const[selectCategory,setSelectCategory]=useState("")
+  const [selectCategory, setSelectCategory] = useState("");
   const data = useMemo(() => posts, [posts]);
 
   const columns = [
     {
       header: "ID",
       accessorKey: "id",
-     
     },
     {
       header: "Image",
@@ -84,7 +85,6 @@ export default function Dashboard() {
       },
     },
   ];
-  
 
   //calculate total orders
   const totalOrders = useMemo(() => {
@@ -121,31 +121,36 @@ export default function Dashboard() {
       .reduce((sum, row) => sum + row.sales, 0);
   }, [data]);
 
-  
-
   //category filter
-const handleClick=(category)=>{
-  setSelectCategory(category)
+  const handleClick = (category) => {
+    setSelectCategory(category);
+  };
+  const filteredProducts = useMemo(() => {
+    return selectCategory
+      ? data.filter((row) => row.category === selectCategory)
+      : data;
+  }, [data, selectCategory]);
 
-}
-const filteredProducts=useMemo(()=>{
-  return selectCategory?data.filter((row)=>row.category===selectCategory):data
-},[data,selectCategory])
+  const table = useReactTable({
+    columns,
+    data: filteredProducts,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    state: {
+      pagination,
+    },
+  });
+const pieData=[
+  {name:"Mens", value:{totalMenSale}},
+  {name:"Womens", value:{totalWomenSale}},
+  {name:"Children", value:{totalChildrenSale}},
+]
 
-const table = useReactTable({
-  columns,
-  data:filteredProducts,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel:getPaginationRowModel(),
-  onPaginationChange:setPagination,
-  state:{
-    pagination,
-  },
-});
-   
   // const filteredData=selectCategory?data.filter((row)=>row.category===selectCategory):data;
- 
+
   return (
+    
     <div>
       <Box
         display="flex"
@@ -157,45 +162,41 @@ const table = useReactTable({
         <Box bg="white" w="100%" h="6vh" p="6px" mb="20px" textAlign="center">
           Ecommerce
         </Box>
-        {/* <Box display="flex">
-          <LineChart
-            xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13,14,15,16,17] }]}
-            series={[
-              {
-                data: data.map((row) => row.stock),
-              },
-            ]}
-            width={500}
-            height={300}
-          />
-          <PieChart
-            series={[
-              {
-                data: [
-                  { value: totalWomenSale, label: "Women" },
-                  { value: totalMenSale, label: "Men" },
-                  { value: totalChildrenSale, label: "Children" },
-                ],
-              },
-            ]}
-            width={400}
-            height={200}
-          />
+        <Box display="flex" justifyContent="space-around">
+        <Card h="300px" width="400px" display="flex" alignItems="center" m="5px">
+          <ResponsiveContainer height={"80%"} width={"60%"}>
+            <BarChart data={posts}>
+            
+              <Bar dataKey="stock" fill="teal"   />
+            </BarChart>
+          </ResponsiveContainer>
+          <CardFooter >Stock of Products</CardFooter> 
+        </Card>
+        <Card h="300px" width="400px" display="flex" alignItems="center" m="5px">
+          <ResponsiveContainer height={"80%"} width={"60%"}>
+            <LineChart data={posts}>
+              
+              <Line dataKey="order" fill="teal" />
+            </LineChart>
+          </ResponsiveContainer>
+          <CardFooter >Orders of Products</CardFooter> 
+        </Card>
+        <Card h="300px" width="400px" display="flex" alignItems="center" m="5px">
+          <ResponsiveContainer height={"80%"} width={"60%"}>
+            <PieChart >
+              
+              <Pie dataKey="sales" data={pieData} fill="teal"  />
+            </PieChart>
+          </ResponsiveContainer>
+          <CardFooter >Sales of Products</CardFooter> 
+        </Card>
         </Box>
-        <Box>
-          <BarChart
-            series={[
-              { data: data.map((row) => row.order) },
-              { data: data.map((row) => row.stock) },
-            ]}
-            height={390}
-            xAxis={[{ data: ["Skirt", "Shirt", "Pant"], scaleType: "band" }]}
-            margin={{ top: 10, bottom: 30, left: 180, right: 10 }}
-          />
-        </Box> */}
+
+
 
        
-        <SimpleGrid column={2} spacing={10}>
+
+        <SimpleGrid column={2} spacing={10} textAlign="center" color="white" mt="20px"  >
           <Box bg="teal" height="80px">
             Total Users
             <Text>{totalUsers}</Text>
@@ -226,14 +227,18 @@ const table = useReactTable({
               <MenuList>
                 <MenuItem onClick={() => handleClick("All")}>All</MenuItem>
                 <MenuItem onClick={() => handleClick("Mens")}>MENS</MenuItem>
-                <MenuItem onClick={() => handleClick("Womens")}>WOMENS</MenuItem>
-                <MenuItem onClick={() => handleClick("Children")}>KIDS</MenuItem>
+                <MenuItem onClick={() => handleClick("Womens")}>
+                  WOMENS
+                </MenuItem>
+                <MenuItem onClick={() => handleClick("Children")}>
+                  KIDS
+                </MenuItem>
               </MenuList>
             </Menu>
           </VStack>
         </Box>
         <TableContainer>
-   <Table colorScheme="teal" cellPadding="3px">
+          <Table colorScheme="teal" cellPadding="3px">
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -262,25 +267,22 @@ const table = useReactTable({
               ))}
             </Tbody>
           </Table>
-      
-       <Box display="flex" justifyContent="space-around"> 
-          <Button
-  onClick={() => table.firstPage()}
-  disabled={!table.getCanPreviousPage()}
->
-  {'<<'}
-</Button>
 
+          <Box display="flex" justifyContent="space-around">
+            <Button
+              onClick={() => table.firstPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {"<<"}
+            </Button>
 
-
-<Button
-  onClick={() => table.lastPage()}
-  disabled={!table.getCanNextPage()}
->
-  {'>>'}
-</Button>
-</Box>
-
+            <Button
+              onClick={() => table.lastPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              {">>"}
+            </Button>
+          </Box>
         </TableContainer>
       </Box>
     </div>

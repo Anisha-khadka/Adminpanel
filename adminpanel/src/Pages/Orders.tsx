@@ -1,13 +1,13 @@
 import { Box, Button, Table, TableContainer, Tbody, Td, Text, Th, Tr } from "@chakra-ui/react";
 import pData from "../ORDER_DATA.json";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 
 
 export default function Orders() {
 
-
+const[text,setText]=useState("");
  const data= useMemo(()=>pData,[])
 
  const columns=[
@@ -26,7 +26,9 @@ export default function Orders() {
     { header:"Action",
       accessorKey:"action",
       cell:({row})=>(
-          <Button bg="teal"  color="white" p="2px"onClick={()=>handleClick(row.original)}>
+          <Button bg="teal"  color="white" p="2px"onClick={()=>handleClick(row.original)
+          
+          }>
          View
           </Button>
       )
