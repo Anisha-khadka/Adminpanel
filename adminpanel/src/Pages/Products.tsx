@@ -53,7 +53,7 @@ export default function Products() {
 
   return (
     <div>
-      <Box pt="10px" h="130vh" bg="lightgray">
+      <Box display={'flex'} pt="10px" h="130vh" bg="lightgray">
         <Text textAlign="center">Product Information</Text>
 
         <Text marginTop="50px">PRODUCT</Text>
@@ -109,20 +109,10 @@ export default function Products() {
           />
         </Box>
 
-        <Box
-          textAlign="center"
-          marginLeft="205px"
-          marginTop="25px"
-          border="none"
-          width="50px"
-          height="35px"
-          borderRadius="8px"
-          backgroundColor="brown"
-          color="white"
-        >
-          <Button onClick={handleAddProduct}>Add</Button>
-         
-        </Box>
+
+          <Button colorScheme="red" onClick={handleAddProduct}>Add</Button>
+          {/* <Button onClick={handleAddProduct}>Add</Button> */}
+  
         <Text color="black" ml="60px" >{succesText}</Text>
 
         {/* <Box display="flex" pt="20px"  justifyContent="space-between">
