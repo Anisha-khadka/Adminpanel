@@ -29,26 +29,21 @@ import { BarChart, LineChart, PieChart } from "@mui/x-charts";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useProductStore } from "../store/ProductStore";
 
-
-
 export default function Dashboard() {
+  const posts = useProductStore((state) => state.posts);
+  console.log(posts);
 
- 
-  const posts=useProductStore((state)=>state.posts);
-  console.log(posts)
-
-  const[pagination,setPagination]=useState({
-    pageIndex:0,
-    pageSize:10,
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
   });
-  const[selectCategory,setSelectCategory]=useState("")
+  const [selectCategory, setSelectCategory] = useState("");
   const data = useMemo(() => posts, [posts]);
 
   const columns = [
     {
       header: "ID",
       accessorKey: "id",
-     
     },
     {
       header: "Image",
@@ -84,7 +79,6 @@ export default function Dashboard() {
       },
     },
   ];
-  
 
   //calculate total orders
   const totalOrders = useMemo(() => {
@@ -121,30 +115,29 @@ export default function Dashboard() {
       .reduce((sum, row) => sum + row.sales, 0);
   }, [data]);
 
-  
-
   //category filter
-const handleClick=(category)=>{
-  setSelectCategory(category)
+  const handleClick = (category) => {
+    setSelectCategory(category);
+  };
+  const filteredProducts = useMemo(() => {
+    return selectCategory
+      ? data.filter((row) => row.category === selectCategory)
+      : data;
+  }, [data, selectCategory]);
 
-}
-const filteredProducts=useMemo(()=>{
-  return selectCategory?data.filter((row)=>row.category===selectCategory):data
-},[data,selectCategory])
+  const table = useReactTable({
+    columns,
+    data: filteredProducts,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    state: {
+      pagination,
+    },
+  });
 
-const table = useReactTable({
-  columns,
-  data:filteredProducts,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel:getPaginationRowModel(),
-  onPaginationChange:setPagination,
-  state:{
-    pagination,
-  },
-});
-   
   // const filteredData=selectCategory?data.filter((row)=>row.category===selectCategory):data;
- 
+
   return (
     <div>
       <Box
@@ -159,7 +152,13 @@ const table = useReactTable({
         </Box>
         <Box display="flex">
           <LineChart
-            xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13,14,15,16,17] }]}
+            xAxis={[
+              {
+                data: [
+                  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                ],
+              },
+            ]}
             series={[
               {
                 data: data.map((row) => row.stock),
@@ -194,7 +193,6 @@ const table = useReactTable({
           />
         </Box>
 
-       
         <SimpleGrid column={2} spacing={10}>
           <Box bg="teal" height="80px">
             Total Users
@@ -226,14 +224,18 @@ const table = useReactTable({
               <MenuList>
                 <MenuItem onClick={() => handleClick("All")}>All</MenuItem>
                 <MenuItem onClick={() => handleClick("Mens")}>MENS</MenuItem>
-                <MenuItem onClick={() => handleClick("Womens")}>WOMENS</MenuItem>
-                <MenuItem onClick={() => handleClick("Children")}>KIDS</MenuItem>
+                <MenuItem onClick={() => handleClick("Womens")}>
+                  WOMENS
+                </MenuItem>
+                <MenuItem onClick={() => handleClick("Children")}>
+                  KIDS
+                </MenuItem>
               </MenuList>
             </Menu>
           </VStack>
         </Box>
         <TableContainer>
-   <Table colorScheme="teal" cellPadding="3px">
+          <Table colorScheme="teal" cellPadding="3px">
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -262,25 +264,22 @@ const table = useReactTable({
               ))}
             </Tbody>
           </Table>
-      
-       <Box display="flex" justifyContent="space-around"> 
-          <Button
-  onClick={() => table.firstPage()}
-  disabled={!table.getCanPreviousPage()}
->
-  {'<<'}
-</Button>
 
+          <Box display="flex" justifyContent="space-around">
+            <Button
+              onClick={() => table.firstPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {"<<"}
+            </Button>
 
-
-<Button
-  onClick={() => table.lastPage()}
-  disabled={!table.getCanNextPage()}
->
-  {'>>'}
-</Button>
-</Box>
-
+            <Button
+              onClick={() => table.lastPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              {">>"}
+            </Button>
+          </Box>
         </TableContainer>
       </Box>
     </div>
