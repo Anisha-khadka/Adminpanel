@@ -157,7 +157,7 @@ const table = useReactTable({
         <Box bg="white" w="100%" h="6vh" p="6px" mb="20px" textAlign="center">
           Ecommerce
         </Box>
-        <Box display="flex">
+        {/* <Box display="flex">
           <LineChart
             xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13,14,15,16,17] }]}
             series={[
@@ -192,7 +192,7 @@ const table = useReactTable({
             xAxis={[{ data: ["Skirt", "Shirt", "Pant"], scaleType: "band" }]}
             margin={{ top: 10, bottom: 30, left: 180, right: 10 }}
           />
-        </Box>
+        </Box> */}
 
        
         <SimpleGrid column={2} spacing={10}>
